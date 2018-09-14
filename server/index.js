@@ -2,6 +2,9 @@ const express = require('express')
 const PORT = process.env.PORT || 8080
 const app = express()
 const socketio = require('socket.io')
+const morgan = require('morgan')
+const compression = require('compression')
+const path = require('path')
 module.exports = app
 
 if(process.env.NODE_ENV !== 'production') require('../secrets')
@@ -17,8 +20,12 @@ const createApp = () => {
   // compression middleware
   app.use(compression())
 
+  app.use('/api', require('./api'))
+
   // static file-serving middleware
   app.use(express.static(path.join(__dirname, '..', 'public')))
+
+
 
   // // any remaining requests with an extension (.js, .css, etc.) send 404
   // app.use((req, res, next) => {
@@ -36,7 +43,7 @@ const createApp = () => {
     res.sendFile(path.join(__dirname, '..', 'public/index.html'))
   })
   
-  app.use('/api', require('./api'))
+  
 
   // error handling endware
   app.use((err, req, res, next) => {
@@ -55,4 +62,15 @@ const startListening = () => {
   // set up our socket control center
   const io = socketio(server)
   require('./socket')(io)
+}
+
+async function bootApp() {
+  await createApp()
+  await startListening()
+}
+
+if (require.main === module) {
+  bootApp()
+} else {
+  createApp()
 }

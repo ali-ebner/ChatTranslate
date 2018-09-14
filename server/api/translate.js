@@ -1,46 +1,39 @@
 // Imports the Google Cloud client library
 const {Translate} = require('@google-cloud/translate')
 
-const text = 'Bonjour monde!'
-const target = 'en'
+// const text = 'Bonjour monde!'
+// const target = 'en'
 
-const translateText = (text, target) => {
-
-
+const translateText = async (text, target) => {
+console.log('here')
 // Creates a client
 const projectId = 'chattranslate-215721'
-const translate = new Translate({
-  projectId: projectId,
-})
+const translate = new Translate()
 
-/**
- * TODO(developer): Uncomment the following lines before running the sample.
- */
-// const text = 'The text to translate, e.g. Hello, world!';
+// await translate
+//   .translate(text, target)
+//   .then(results => {
+//     let translations = results[0];
+//     translations = Array.isArray(translations)
+//       ? translations
+//       : [translations]
 
-// Translates the text into the target language. "text" can be a string for
-// translating a single piece of text, or an array of strings for translating
-// multiple texts.
-// 
+//     console.log('Translations:')
+//     translations.forEach((translation, i) => {
+//       console.log(`${text[i]} => (${target}) ${translation}`)
+//     })
+//     console.log(translations)
+//     return translations
+//   })
+//   .catch(err => {
+//     console.error('ERROR:', err)
+//   })
 
-translate
-  .translate(text, target)
-  .then(results => {
-    let translations = results[0];
-    translations = Array.isArray(translations)
-      ? translations
-      : [translations]
 
-    console.log('Translations:')
-    translations.forEach((translation, i) => {
-      console.log(`${text[i]} => (${target}) ${translation}`)
-    })
-    return translations.join('')
-  })
-  .catch(err => {
-    console.error('ERROR:', err)
-  })
-
+const translation = await translate.translate(text, target)
+console.log(translation)
+return translation
 }
-translateText(text, target)
+
+//translateText(text, target)
 module.exports = translateText
